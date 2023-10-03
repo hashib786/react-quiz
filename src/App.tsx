@@ -22,14 +22,16 @@ const intialState: IntialStateI = {
 };
 
 type DataReceived = { type: "dataReceived"; payload: QuestionI[] };
-type ActionType = DataReceived;
+type DataFailed = { type: "dataFailed" };
+type ActionType = DataReceived | DataFailed;
 
 const reducers = (state: IntialStateI, action: ActionType): IntialStateI => {
-  const { type, payload } = action;
+  const { type } = action;
   switch (type) {
     case "dataReceived":
-      return { ...state, questions: payload };
-
+      return { ...state, questions: action.payload, status: "Ready" };
+    case "dataFailed":
+      return { ...state, status: "Error" };
     default:
       return state;
   }
@@ -44,9 +46,8 @@ const App = () => {
       .then((res) => res.json())
       .then((data: QuestionI[]) => {
         dispatch({ type: "dataReceived", payload: data });
-        console.log(data);
       })
-      .catch(console.error);
+      .catch(() => dispatch({ type: "dataFailed" }));
   }, []);
 
   return (

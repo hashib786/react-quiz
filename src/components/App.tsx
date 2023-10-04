@@ -5,6 +5,7 @@ import Loader from "./Loader";
 import Error from "./Error";
 import StartScreen from "./StartScreen";
 import Question from "./Question";
+import NextQuestion from "./NextQuestion";
 
 export interface QuestionI {
   correctOption: number;
@@ -35,7 +36,8 @@ export type ActionType =
   | { type: "dataReceived"; payload: QuestionI[] }
   | { type: "dataFailed" }
   | { type: "start" }
-  | { type: "newAnswer"; payload: number };
+  | { type: "newAnswer"; payload: number }
+  | { type: "nextQuestion" };
 
 const reducers = (state: IntialStateI, action: ActionType): IntialStateI => {
   const { type } = action;
@@ -57,6 +59,8 @@ const reducers = (state: IntialStateI, action: ActionType): IntialStateI => {
             : state.points,
       };
     }
+    case "nextQuestion":
+      return { ...state, index: state.index + 1, answer: null };
     default:
       return state;
   }
@@ -88,11 +92,14 @@ const App = () => {
           <StartScreen dispatch={dispatch} numQuestions={numQuestions} />
         )}
         {status === "Active" && (
-          <Question
-            answer={answer}
-            dispatch={dispatch}
-            question={questions[index]}
-          />
+          <>
+            <Question
+              answer={answer}
+              dispatch={dispatch}
+              question={questions[index]}
+            />
+            {answer && <NextQuestion dispatch={dispatch} />}
+          </>
         )}
       </Content>
     </div>

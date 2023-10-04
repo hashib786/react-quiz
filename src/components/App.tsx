@@ -42,7 +42,8 @@ export type ActionType =
   | { type: "start" }
   | { type: "newAnswer"; payload: number }
   | { type: "nextQuestion" }
-  | { type: "finish" };
+  | { type: "finish" }
+  | { type: "reStart" };
 
 const reducers = (state: IntialStateI, action: ActionType): IntialStateI => {
   const { type } = action;
@@ -73,6 +74,8 @@ const reducers = (state: IntialStateI, action: ActionType): IntialStateI => {
         highScore:
           state.points > state.highScore ? state.points : state.highScore,
       };
+    case "reStart":
+      return { ...state, index: 0, answer: null, points: 0, status: "Ready" };
     default:
       return state;
   }
@@ -132,6 +135,7 @@ const App = () => {
             highScore={highScore}
             maxPossiblePoints={maxPossiblePoints}
             points={points}
+            dispatch={dispatch}
           />
         )}
       </Content>

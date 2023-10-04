@@ -1,10 +1,18 @@
+import { ActionType } from "./App";
+
 type Props = {
   points: number;
   maxPossiblePoints: number;
   highScore: number;
+  dispatch: (value: ActionType) => void;
 };
 
-const FinishedScreen = ({ points, maxPossiblePoints, highScore }: Props) => {
+const FinishedScreen = ({
+  points,
+  maxPossiblePoints,
+  highScore,
+  dispatch,
+}: Props) => {
   const percentage = (points / maxPossiblePoints) * 100;
   let emoji;
   if (percentage === 100) emoji = "🥇";
@@ -20,6 +28,12 @@ const FinishedScreen = ({ points, maxPossiblePoints, highScore }: Props) => {
         {maxPossiblePoints} ({Math.ceil(percentage)}%)
       </p>
       <p className="highscore">(HighScore: {highScore} points)</p>
+      <button
+        className="btn btn-ui"
+        onClick={() => dispatch({ type: "reStart" })}
+      >
+        Restart
+      </button>
     </>
   );
 };

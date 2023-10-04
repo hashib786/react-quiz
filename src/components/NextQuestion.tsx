@@ -2,9 +2,11 @@ import { ActionType } from "./App";
 
 type Props = {
   dispatch: (value: ActionType) => void;
+  answer: number | null;
 };
 
-const NextQuestion = ({ dispatch }: Props) => {
+const NextQuestion = ({ dispatch, answer }: Props) => {
+  if (!answer) return null;
   return (
     <button
       className="btn btn-ui"

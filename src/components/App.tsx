@@ -98,7 +98,7 @@ const App = () => {
               dispatch={dispatch}
               question={questions[index]}
             />
-            {answer && <NextQuestion dispatch={dispatch} />}
+            <NextQuestion dispatch={dispatch} answer={answer} />
           </>
         )}
       </Content>

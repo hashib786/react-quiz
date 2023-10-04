@@ -3,6 +3,7 @@ import Content from "./Content";
 import Header from "./Header";
 import Loader from "./Loader";
 import Error from "./Error";
+import StartScreen from "./StartScreen";
 
 interface QuestionI {
   correctOption: number;
@@ -40,7 +41,8 @@ const reducers = (state: IntialStateI, action: ActionType): IntialStateI => {
 };
 
 const App = () => {
-  const [{ status }, dispatch] = useReducer(reducers, intialState);
+  const [{ status, questions }, dispatch] = useReducer(reducers, intialState);
+  const numQuestions = questions.length;
 
   useEffect(() => {
     fetch("http://localhost:9000/questions")
@@ -57,6 +59,7 @@ const App = () => {
       <Content>
         {status === "Loading" && <Loader />}
         {status === "Error" && <Error />}
+        {status === "Ready" && <StartScreen numQuestions={numQuestions} />}
       </Content>
     </div>
   );

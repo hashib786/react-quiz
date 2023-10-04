@@ -19,18 +19,23 @@ interface IntialStateI {
   questions: QuestionI[];
   status: StatusT;
   index: number;
+  answer: null | number;
+  points: number;
 }
 
 const intialState: IntialStateI = {
   questions: [],
   status: "Loading",
   index: 0,
+  answer: null,
+  points: 0,
 };
 
 export type ActionType =
   | { type: "dataReceived"; payload: QuestionI[] }
   | { type: "dataFailed" }
-  | { type: "start" };
+  | { type: "start" }
+  | { type: "newAnswer"; payload: number };
 
 const reducers = (state: IntialStateI, action: ActionType): IntialStateI => {
   const { type } = action;
@@ -41,13 +46,24 @@ const reducers = (state: IntialStateI, action: ActionType): IntialStateI => {
       return { ...state, status: "Error" };
     case "start":
       return { ...state, status: "Active" };
+    case "newAnswer": {
+      const question = state.questions.at(state.index);
+      return {
+        ...state,
+        answer: action.payload,
+        points:
+          question?.correctOption === action.payload
+            ? state.points + question.points
+            : state.points,
+      };
+    }
     default:
       return state;
   }
 };
 
 const App = () => {
-  const [{ status, questions, index }, dispatch] = useReducer(
+  const [{ status, questions, index, answer }, dispatch] = useReducer(
     reducers,
     intialState
   );
@@ -71,7 +87,13 @@ const App = () => {
         {status === "Ready" && (
           <StartScreen dispatch={dispatch} numQuestions={numQuestions} />
         )}
-        {status === "Active" && <Question question={questions[index]} />}
+        {status === "Active" && (
+          <Question
+            answer={answer}
+            dispatch={dispatch}
+            question={questions[index]}
+          />
+        )}
       </Content>
     </div>
   );

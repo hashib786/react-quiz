@@ -1,16 +1,18 @@
-import { QuestionI } from "./App";
+import { ActionType, QuestionI } from "./App";
 import Options from "./Options";
 
 type Props = {
   question: QuestionI;
+  dispatch: (value: ActionType) => void;
+  answer: number | null;
 };
 
-const Question = ({ question }: Props) => {
+const Question = ({ question, dispatch, answer }: Props) => {
   console.log(question);
   return (
     <div>
       <h4>{question.question}</h4>
-      <Options question={question} />
+      <Options answer={answer} dispatch={dispatch} question={question} />
     </div>
   );
 };

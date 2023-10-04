@@ -4,6 +4,7 @@ import Header from "./Header";
 import Loader from "./Loader";
 import Error from "./Error";
 import StartScreen from "./StartScreen";
+import Question from "./Question";
 
 interface QuestionI {
   correctOption: number;
@@ -24,9 +25,10 @@ const intialState: IntialStateI = {
   status: "Loading",
 };
 
-type DataReceived = { type: "dataReceived"; payload: QuestionI[] };
-type DataFailed = { type: "dataFailed" };
-type ActionType = DataReceived | DataFailed;
+export type ActionType =
+  | { type: "dataReceived"; payload: QuestionI[] }
+  | { type: "dataFailed" }
+  | { type: "start" };
 
 const reducers = (state: IntialStateI, action: ActionType): IntialStateI => {
   const { type } = action;
@@ -35,6 +37,8 @@ const reducers = (state: IntialStateI, action: ActionType): IntialStateI => {
       return { ...state, questions: action.payload, status: "Ready" };
     case "dataFailed":
       return { ...state, status: "Error" };
+    case "start":
+      return { ...state, status: "Active" };
     default:
       return state;
   }
@@ -59,7 +63,10 @@ const App = () => {
       <Content>
         {status === "Loading" && <Loader />}
         {status === "Error" && <Error />}
-        {status === "Ready" && <StartScreen numQuestions={numQuestions} />}
+        {status === "Ready" && (
+          <StartScreen dispatch={dispatch} numQuestions={numQuestions} />
+        )}
+        {status === "Active" && <Question />}
       </Content>
     </div>
   );

@@ -6,7 +6,7 @@ import Error from "./Error";
 import StartScreen from "./StartScreen";
 import Question from "./Question";
 
-interface QuestionI {
+export interface QuestionI {
   correctOption: number;
   options: string[];
   points: number;
@@ -18,11 +18,13 @@ type StatusT = "Loading" | "Error" | "Active" | "Ready" | "Finished";
 interface IntialStateI {
   questions: QuestionI[];
   status: StatusT;
+  index: number;
 }
 
 const intialState: IntialStateI = {
   questions: [],
   status: "Loading",
+  index: 0,
 };
 
 export type ActionType =
@@ -45,7 +47,10 @@ const reducers = (state: IntialStateI, action: ActionType): IntialStateI => {
 };
 
 const App = () => {
-  const [{ status, questions }, dispatch] = useReducer(reducers, intialState);
+  const [{ status, questions, index }, dispatch] = useReducer(
+    reducers,
+    intialState
+  );
   const numQuestions = questions.length;
 
   useEffect(() => {
@@ -66,7 +71,7 @@ const App = () => {
         {status === "Ready" && (
           <StartScreen dispatch={dispatch} numQuestions={numQuestions} />
         )}
-        {status === "Active" && <Question />}
+        {status === "Active" && <Question question={questions[index]} />}
       </Content>
     </div>
   );

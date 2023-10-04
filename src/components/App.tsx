@@ -75,7 +75,7 @@ const reducers = (state: IntialStateI, action: ActionType): IntialStateI => {
           state.points > state.highScore ? state.points : state.highScore,
       };
     case "reStart":
-      return { ...state, index: 0, answer: null, points: 0, status: "Ready" };
+      return { ...intialState, status: "Ready", questions: state.questions };
     default:
       return state;
   }

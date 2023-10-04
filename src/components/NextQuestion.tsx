@@ -6,7 +6,7 @@ type Props = {
 };
 
 const NextQuestion = ({ dispatch, answer }: Props) => {
-  if (!answer) return null;
+  if (answer === null) return null;
   return (
     <button
       className="btn btn-ui"

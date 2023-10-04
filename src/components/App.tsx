@@ -6,6 +6,7 @@ import Error from "./Error";
 import StartScreen from "./StartScreen";
 import Question from "./Question";
 import NextQuestion from "./NextQuestion";
+import Progress from "./Progress";
 
 export interface QuestionI {
   correctOption: number;
@@ -67,11 +68,15 @@ const reducers = (state: IntialStateI, action: ActionType): IntialStateI => {
 };
 
 const App = () => {
-  const [{ status, questions, index, answer }, dispatch] = useReducer(
+  const [{ status, questions, index, answer, points }, dispatch] = useReducer(
     reducers,
     intialState
   );
   const numQuestions = questions.length;
+  const maxPossiblePoints = questions.reduce(
+    (prev, curr) => prev + curr.points,
+    0
+  );
 
   useEffect(() => {
     fetch("http://localhost:9000/questions")
@@ -93,6 +98,13 @@ const App = () => {
         )}
         {status === "Active" && (
           <>
+            <Progress
+              index={index}
+              answer={answer}
+              points={points}
+              numQuestions={numQuestions}
+              maxPossiblePoints={maxPossiblePoints}
+            />
             <Question
               answer={answer}
               dispatch={dispatch}

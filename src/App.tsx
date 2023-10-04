@@ -1,6 +1,8 @@
 import { useEffect, useReducer } from "react";
 import Content from "./Content";
 import Header from "./Header";
+import Loader from "./Loader";
+import Error from "./Error";
 
 interface QuestionI {
   correctOption: number;
@@ -38,8 +40,7 @@ const reducers = (state: IntialStateI, action: ActionType): IntialStateI => {
 };
 
 const App = () => {
-  const [state, dispatch] = useReducer(reducers, intialState);
-  console.log(state, dispatch);
+  const [{ status }, dispatch] = useReducer(reducers, intialState);
 
   useEffect(() => {
     fetch("http://localhost:9000/questions")
@@ -54,7 +55,8 @@ const App = () => {
     <div className="app">
       <Header />
       <Content>
-        <p>Hello World</p>
+        {status === "Loading" && <Loader />}
+        {status === "Error" && <Error />}
       </Content>
     </div>
   );
